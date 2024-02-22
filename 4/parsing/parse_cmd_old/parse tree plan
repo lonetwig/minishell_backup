@@ -1,0 +1,43 @@
+the precedence of the operators:
+|| cancels all right cmds if the left cmd is 1
+&& cancels all right cmds if the left cmd is 0
+| needs pipex as we need the output of old cmd
+> >> < << needs dup2 to work with fd
+() execute with a copy of the env as you shouldnt affect the original env.
+    this encapsulate all what happens inside of it ex: 
+    for (cmd1 && cmd2) | cmd 3 if cmd1 failed cmd3 would execute
+
+then commands
+
+
+**cmd
+operator
+*left
+*right
+
+<<
+
+echo > test
+
+
+
+| || && = 2
+<< >> < > = 1
+
+
+//first
+find the most precedent opper, then split the string with it.
+always put the left of command in left and the right of it in right
+then repeat the same process on each side, untill no oper is left
+
+
+//second
+
+
+******* dont forget : all the quotes cancel the parantasis, turn them and ther content to literals **********
+not really
+
+
+hello"hello world"hello -> "hellohello worldhello"
+
+hello'hello'"hello" -> hellohellohello
