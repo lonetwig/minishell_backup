@@ -6,7 +6,7 @@
 /*   By: ealislam <ealislam@student.42.fr>          +#+  +:+       +#+        */
 /*                                                +#+#+#+#+#+   +#+           */
 /*   Created: 2024/02/27 11:22:23 by ealislam          #+#    #+#             */
-/*   Updated: 2024/04/16 16:21:30 by ealislam         ###   ########.fr       */
+/*   Updated: 2024/04/17 14:57:34 by ealislam         ###   ########.fr       */
 /*                                                                            */
 /* ************************************************************************** */
 
@@ -18,8 +18,6 @@ static void	free_all(t_malloc *all_alloc)
 
 	while (all_alloc)
 	{
-		// printf("yyyy\n");
-		// printf("%p\n",all_alloc->ptr);
         free(all_alloc->ptr);
         tmp = all_alloc;
         all_alloc = all_alloc->next;
@@ -39,8 +37,8 @@ static int	add_node(t_malloc *all_alloc, void *ptr)
 	return (0);
 }
 
-void	*ft_malloc(unsigned int size, int free, char **error)
-{ 
+void	*ft_malloc(unsigned int size, int free, t_all *all)
+{
 	static t_malloc	all_alloc = {"head", NULL};
 	void			*ptr;
 
@@ -51,13 +49,32 @@ void	*ft_malloc(unsigned int size, int free, char **error)
 		all_alloc.next = NULL;
 		return (NULL);
 	}
-	if(!*error)
+	if(!all->error)
 	{
-		// printf("xxx\n");
 		ptr = malloc(size);
-		// printf("%p\n",ptr);
 		if (!ptr || add_node(&all_alloc, ptr))
-			return (*error = "Minibash: Malloc has failed\n", NULL);
+			return (all->error = "Minibash: Malloc has failed\n", NULL);
+	}
+	return (ptr);
+}
+
+void	*ft_malloc_permanent(unsigned int size, int free, t_all *all)
+{
+	static t_malloc	all_alloc = {"head", NULL};
+	void			*ptr;
+
+	ptr = NULL;
+	if (free)
+	{
+		free_all(all_alloc.next);
+		all_alloc.next = NULL;
+		return (NULL);
+	}
+	if(!all->error)
+	{
+		ptr = malloc(size);
+		if (!ptr || add_node(&all_alloc, ptr))
+			return (all->error = "Minibash: Malloc has failed\n", NULL);
 	}
 	return (ptr);
 }
