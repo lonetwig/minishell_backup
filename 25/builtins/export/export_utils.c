@@ -1,0 +1,41 @@
+/* ************************************************************************** */
+/*                                                                            */
+/*                                                        :::      ::::::::   */
+/*   export_utils.c                                     :+:      :+:    :+:   */
+/*                                                    +:+ +:+         +:+     */
+/*   By: ealislam <ealislam@student.42.fr>          +#+  +:+       +#+        */
+/*                                                +#+#+#+#+#+   +#+           */
+/*   Created: 2024/04/25 10:30:22 by azainabi          #+#    #+#             */
+/*   Updated: 2024/06/03 15:08:08 by ealislam         ###   ########.fr       */
+/*                                                                            */
+/* ************************************************************************** */
+
+#include "../../minibash.h"
+
+void	handle_export_arg(char **key_val, char **arg, int k, t_all *all)
+{
+	t_env	*env;
+	char	*tmp;
+
+	env = all->env;
+	key_val = parse_export(arg, k, all);
+	if (!key_val)
+		return ;
+	if (parse_key(key_val, all))
+		return ;
+	if (key_val[1] && key_val[1][0] == '$')
+	{
+		tmp = ft_strdup(key_val[1], all);
+		if (!tmp)
+			return ;
+		key_val[1] = ft_strjoin("\\", tmp, all);
+		printf("hna\n");
+		all->expand_flag = 1;
+		if (!key_val[1])
+			return ;
+	}
+	if (!check_key(env, key_val[0]))
+		append_node(&env, key_val[0], key_val[1], all);
+	else
+		change_val(&env, key_val, all->append, all);
+}
